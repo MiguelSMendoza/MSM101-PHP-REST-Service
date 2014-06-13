@@ -41,32 +41,40 @@ class API extends REST {
 		$parts = explode('/', $_SERVER['REQUEST_URI']);
 		$this->parseIncomingParams();
 		
-		if(($parts[2]=='Client')&&(is_numeric($parts[3])))
+		if($parts[2]=='Clients')
 		{
-			$this->ID = $parts[3];
+			if(($parts[3]=='Client')&&(is_numeric($parts[4])))
+			{
+				$this->ID = $parts[4];
 
-			switch($this->get_request_method()){
-
-			case "PUT":
-				$this->updateClient();
-				break;
-			case "GET":
-				$this->getClient();
-				break;
-			case "DELETE":
-				$this->deleteClient();
-				break;
-			default:
-				$this->response('',404);
+				switch($this->get_request_method()) {
+					case "PUT":
+						$this->updateClient();
+						break;
+					case "GET":
+						$this->getClient();
+						break;
+					case "DELETE":
+						$this->deleteClient();
+						break;
+					default:
+						$this->response('',404);
+				}
 			}
-		}
-		else if (($parts[2]=='Client')&&($this->get_request_method()=="POST"))
-		{
-				$this->newClient();
-		}
-		else if ($parts[2]=='Clients')
-		{
-			$this->getClients();
+			else if ($parts[3]=='Client')
+			{
+				switch($this->get_request_method()) {
+					case "POST":
+						$this->newClient();
+						break;
+					default:
+						$this->response('',404);
+				}
+			}
+			else
+			{
+				$this->getClients();
+			}
 		}
 		else
 		{
