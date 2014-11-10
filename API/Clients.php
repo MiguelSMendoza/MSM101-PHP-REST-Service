@@ -105,7 +105,7 @@ class API extends NetREST {
 			}
 			$mysqli->close();
 		}
-		$this->response($this->json($results),200);
+		$this->response($this->encodeJSONforHTML($results),200);
 	}
 	function getClient()
 	{
@@ -127,7 +127,7 @@ class API extends NetREST {
 			}
 			$mysqli->close();
 		}
-		$this->response($this->json($client),200);
+		$this->response($this->encodeJSONforHTML($client),200);
 	}
 
 	function newClient()
@@ -142,7 +142,7 @@ class API extends NetREST {
 			$mysqli->query($query);
 			$i = $mysqli->affected_rows;
 		}
-		$this->response($this->json($i),200);
+		$this->response($this->encodeJSONforHTML($i),200);
 	}
 
 	function updateClient()
@@ -158,7 +158,7 @@ class API extends NetREST {
 			$mysqli->query($query);
 			$i = $mysqli->affected_rows;
 		}
-		$this->response($this->json($i),200);
+		$this->response($this->encodeJSONforHTML($i),200);
 	}
 	
 	function deleteClient()
@@ -171,54 +171,7 @@ class API extends NetREST {
 			$mysqli->query($query);
 			$i = $mysqli->affected_rows;
 		}
-		$this->response($this->json($i),200);
-	}
-
-	public function parseIncomingParams() {
-		$parameters = array();
-
-		if (isset($_SERVER['QUERY_STRING'])) {
-			parse_str($_SERVER['QUERY_STRING'], $parameters);
-		}
-
-		$body = file_get_contents("php://input");
-		$content_type = false;
-		if(isset($_SERVER['CONTENT_TYPE'])) {
-
-			$content_type = $_SERVER['CONTENT_TYPE'];
-		}
-		switch($content_type) {
-		case "application/json":
-			$body_params = json_decode($body);
-
-			if($body_params) {
-				foreach($body_params as $param_name => $param_value) {
-					$parameters[$param_name] = $param_value;
-				}
-			}
-			$this->format = "json";
-			break;
-		case "application/x-www-form-urlencoded":
-			parse_str($body, $postvars);
-			foreach($postvars as $field => $value) {
-				$parameters[$field] = $value;
-
-			}
-			$this->format = "html";
-			break;
-		default:
-			// we could parse other supported formats here
-			break;
-		}
-		$this->parameters = $parameters;
-	}
-
-	private function json($data){
-		if(is_array($data)){
-			return json_encode($data);
-		}
-		else
-			return json_encode($data);
+		$this->response($this->encodeJSONforHTML($i),200);
 	}
 }
 
