@@ -16,7 +16,7 @@ class Client
 	public $Age;
 
 }
-class API extends REST {
+class API extends NetREST {
 
 	var $data = "";
 
@@ -38,16 +38,16 @@ class API extends REST {
 	public function processApi(){
 
 		$params = array();
-		$parts = explode('/', $_SERVER['REQUEST_URI']);
+		$parts = $this->getRequestPartsFrom("API");
 		$this->parseIncomingParams();
 		
-		if($parts[2]=='Clients')
+		if($parts[1]=='Clients')
 		{
-			if(($parts[3]=='Client')&&(is_numeric($parts[4])))
+			if(($parts[2]=='Client')&&(is_numeric($parts[3])))
 			{
-				$this->ID = $parts[4];
+				$this->ID = $parts[3];
 
-				switch($this->get_request_method()) {
+				switch($this->getRequestMethod()) {
 					case "PUT":
 						$this->updateClient();
 						break;
@@ -61,9 +61,9 @@ class API extends REST {
 						$this->response('',404);
 				}
 			}
-			else if ($parts[3]=='Client')
+			else if ($parts[2]=='Client')
 			{
-				switch($this->get_request_method()) {
+				switch($this->getRequestMethod()) {
 					case "POST":
 						$this->newClient();
 						break;
