@@ -1,6 +1,6 @@
 <?php
 
-require_once("Rest.inc.php");
+require_once("NetREST.php");
 class Client
 {
 	/** @var int */
